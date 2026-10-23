@@ -31,6 +31,7 @@ rule-based policy on identical passenger arrivals.
 |------|--------------|
 | `elevator_env.py` | `ElevatorEnv`, `RandomPolicy`, `rule_based_policy`, `evaluate()`, `print_results_table()` |
 | `q_learning_elevator.py` | Q-learning agent, training loop, CSV log, learning-curve plot, comparison table |
+| `app.py` | Small Flask web page (results + live demo) so the project can run as a web service |
 | `results/` | Learning curve and per-episode training log from the full run |
 
 ## Run it
@@ -72,3 +73,20 @@ instead of waiting. Reducing the idle penalty or adding a longer-wait penalty ar
 - Penalize long individual waits, not just the number of people waiting.
 - Add cabin capacity or multiple elevators.
 - Train with several agent seeds and report the mean and spread.
+
+## Run the web page locally
+
+```bash
+pip install -r requirements.txt
+python app.py          # then open http://127.0.0.1:5000
+```
+
+## Deploy on Render
+
+1. Push this repo to GitHub.
+2. On render.com: **New + > Web Service**, connect the GitHub repo.
+3. Settings: Runtime **Python 3**, Build Command `pip install -r requirements.txt`,
+   Start Command `gunicorn app:app --timeout 120 --workers 1`, Instance Type **Free**.
+4. Click **Create Web Service**. When the deploy finishes, the site is at `https://<your-service-name>.onrender.com`.
+
+Free web services go to sleep after about 15 minutes without traffic, so the first visit after a pause is slow.
